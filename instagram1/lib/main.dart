@@ -1,70 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:instagram1/pages/Home_page/home_page.dart';
-import 'package:instagram1/pages/theme/theme_provired.dart';
+import 'dart:async';
 
+import 'package:instagram1/log%20in%20page/login.dart';
+import 'package:instagram1/theme/theme_provired.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvired(),
-      child: const MyApp(),
-    ),
-  );
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvired(),
+    child: const MyApp(),
+  ));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
       theme: Provider.of<ThemeProvired>(context).themeData,
+      home: SplashScreen(),
     );
   }
 }
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
-
+class SplashScreen extends StatefulWidget {
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
-  bool n = true;
-  void h() {
-    setState(() {
-      n = !n;
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Splash screen uchun vaqt belgilash (2 soniya)
+    Timer(const Duration(seconds: 2), () {
+      // Loadingdan keyin asosiy sahifaga o'tadi
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: n ? ThemeData.dark() : ThemeData.light(),
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  h();
-                },
-                child: Text(n ? "light mood" : "Dark mood"),
+    return Scaffold(
+      backgroundColor: Colors.grey.shade800,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Loading ekranda logotip yoki boshqa elementlar
+            Padding(
+              padding: const EdgeInsets.only(top: 250),
+              child: Container(
+                width: 100,
+                height: 100,
+                child: Image.asset("images/instagramlogo.png"),
               ),
-              Container(width: 150,height: 150,
-               color:n?Colors.white:Colors.black, 
+            ),
+            SizedBox(
+              height: 180,
+            ),
+            Text(
+              'Instagram',
+              style: TextStyle(
+                fontSize: 35,
+color: Colors.white,                fontWeight: FontWeight.bold,
+                fontFamily: "insta",
               ),
-            ],
-          ),
+            ), // Loading animatsiyasi
+          ],
         ),
       ),
     );

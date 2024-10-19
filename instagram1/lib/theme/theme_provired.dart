@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:instagram1/pages/theme/dark_mode.dart';
-import 'package:instagram1/pages/theme/light_moode.dart';
+import 'package:instagram1/theme/dark_mode.dart';
+import 'package:instagram1/theme/light_moode.dart';
 
 
 
