@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram1/hom_page/hompage.dart';
+import 'package:instagram1/profile/Myprofile.dart';
+import 'package:instagram1/searchage/search_pages.dart';
 
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -22,13 +24,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   // List of widgets for different tabs
-  static const List<Widget> _widgetOptions = <Widget>[
+  static  List<Widget> _widgetOptions = <Widget>[
     Hompage(), // For Home Page (Instagram feed)
-    Center(child: Text('Search Page', style: TextStyle(fontSize: 24))), // Search Tab
+    SearchPage(), // Search Tab
     Center(child: Text('Add Post Page', style: TextStyle(fontSize: 24))), // Add Post Tab
     Center(child: Text('Notifications Page', style: TextStyle(fontSize: 24))), // Notifications Tab
-    Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))), // Profile Tab
-  ];
+Myprofile()  ];
 
   @override
   Widget build(BuildContext context) {
