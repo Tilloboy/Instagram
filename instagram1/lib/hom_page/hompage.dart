@@ -25,65 +25,105 @@ class _HompageState extends State<Hompage> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 40),
-          child: Icon(
-            CupertinoIcons.camera,
-            size: 32,
-            weight: 5,
-          ),
+     body: CustomScrollView(
+  slivers: [
+    SliverAppBar(
+      floating: true,
+      snap: true,
+      expandedHeight: 75.0,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      leading: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: IconButton(
+          icon: Icon(CupertinoIcons.camera, size: 30),
+          onPressed: () {
+            // Camera action
+          },
         ),
-        title: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40, left: 40),
-            child: Text(
-              'Instagram',
-              style: TextStyle(
-                fontFamily: 'insta',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+      ),
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Text(
+            'Instagram',
+            style: TextStyle(
+              fontFamily: 'insta',
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 45),
-            child: Container(
-              width: 100,
-              height: 50,
-              // Display different image based on theme mode
-              child: Image.asset(
-                isDarkMode ? "images/inst1.png" : "images/inst.png",
-                fit: BoxFit.cover,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(top: 20, right: 0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: Stack(
+                  children: [
+                    Icon(Icons.live_tv_sharp, size: 30),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  // IGTV action
+                },
               ),
+              IconButton(
+                icon: Icon(CupertinoIcons.paperplane, size: 30),
+                onPressed: () {
+                  // Direct Messenger action
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+
+    SliverList(
+      delegate: SliverChildListDelegate(
+        [
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: double.infinity,
+              height: 100,
+              child: hompagestoris(),
+            ),
+          ),
+
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: HompageInstagramPost(),
+              width: double.infinity,
             ),
           ),
         ],
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 100,
-                child: hompagestoris(),
-              ),
-              Container(
-                child: HompageInstagramPost(),
-                height: 550,
-                width: double.infinity,
-              )
-            ],
-          ),
-        ),
-      ),
+    ),
+  ],
+),
+
     );
   }
 }

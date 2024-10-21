@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:instagram1/hom_page/hompage.dart';
+import 'package:instagram1/bottom%20navigation%20bar/bottom_navigation_bar.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class loginstatus extends StatefulWidget {
@@ -35,7 +36,7 @@ class _loginstatusState extends State<loginstatus> {
       // Navigate to the homepage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Hompage()), // Replace with your next page
+        MaterialPageRoute(builder: (context) =>  CustomBottomNavigationBar()), // Replace with your next page
       );
     } else {
       // If login fails, show a snackbar with an error message
@@ -56,7 +57,7 @@ class _loginstatusState extends State<loginstatus> {
     if (isLoggedIn == true) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Hompage()), // Replace with your next page
+        MaterialPageRoute(builder: (context) => CustomBottomNavigationBar()), // Replace with your next page
       );
     }
   }
