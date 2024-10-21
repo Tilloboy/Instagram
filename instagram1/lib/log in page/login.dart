@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram1/log%20in%20page/ikkinshilogin.dart';
 import 'package:instagram1/theme/theme_provired.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,9 +13,38 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  // Check if user is already logged in
+  Future<void> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    });
+
+    if (isLoggedIn) {
+      // Navigate to the next page if already logged in
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => loginstatus()),
+      );
+    }
+  }
+
+  // Save login status to SharedPreferences
+  Future<void> saveLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Provider orqali tema holatini olish
     bool isDarkMode = Provider.of<ThemeProvired>(context).isDarkmoode;
 
     return Scaffold(
@@ -32,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Tema o'zgartirish funksiyasi
                         Provider.of<ThemeProvired>(context, listen: false)
                             .toogleTheme();
                       },
@@ -44,12 +73,11 @@ class _LoginPageState extends State<LoginPage> {
                     CupertinoSwitch(
                       value: isDarkMode,
                       onChanged: (value) {
-                        // Tema o'zgartirish va UI yangilash
                         Provider.of<ThemeProvired>(context, listen: false)
                             .toogleTheme();
                         setState(() {});
                       },
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -61,15 +89,12 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   'Instagram',
                   style: TextStyle(
-                   fontSize: 35,
-                      fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
                     fontFamily: "insta",
-                  
                   ),
                 ),
-                SizedBox(
-                  height: 50,
-                ),
+                SizedBox(height: 50),
                 CircleAvatar(
                   radius: 65,
                   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -85,16 +110,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Text(
                   "gaa_bi_sgm",
                   style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
                 Container(
                   width: 330,
                   height: 50,
@@ -109,13 +130,14 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          await saveLoginStatus(); // Save login status
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => loginstatus(),
                             ),
-                          ); // Add login functionality
+                          );
                         },
                         child: Text(
                           'Log in',
@@ -125,9 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
                 InkWell(
                   onTap: () {},
                   child: Text(
@@ -149,9 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                   thickness: 2,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

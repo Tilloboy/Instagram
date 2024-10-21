@@ -64,7 +64,9 @@ class _HompageState extends State<Hompage> {
           ),
         ],
       ),
-      body: Container(width: double.infinity,height: double.infinity,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -73,7 +75,11 @@ class _HompageState extends State<Hompage> {
                 height: 100,
                 child: hompagestoris(),
               ),
-              HompageInstagramPost()
+              Container(
+                child: HompageInstagramPost(),
+                height: 550,
+                width: double.infinity,
+              )
             ],
           ),
         ),

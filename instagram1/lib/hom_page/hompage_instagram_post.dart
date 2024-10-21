@@ -13,11 +13,12 @@ List post =[
  a(
       rasm: "images/1.jpg",
       nom: "Rengo_ku",
+      commit: "Liked by craig_love and 44,686 others\n The game in Japan was amazing and I want to share some photos",
     ),
 ];
 
-Widget postmap (a){
-  return Container(width: 350,
+Widget postmap (b){
+  return Container(width: double.infinity,
   height: 550,
     child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +30,7 @@ Widget postmap (a){
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                     a.rasm ), // Your profile image URL
+                     b.rasm ), // Your profile image URL
                   radius: 25,
                 ),
                 SizedBox(width: 10),
@@ -37,7 +38,7 @@ Widget postmap (a){
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      a.nom,
+                      b.nom,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('Tokyo, Japan'),
@@ -48,7 +49,7 @@ Widget postmap (a){
           ),
           // Post Image
           Image.asset(
-            a.rasm,// Your post image URL
+            b.rasm,// Your post image URL
             width: double.infinity,
             height: 300,
             fit: BoxFit.cover,
@@ -79,7 +80,7 @@ Widget postmap (a){
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Liked by craig_love and 44,686 others',
+                  b.commit,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
@@ -88,10 +89,9 @@ Widget postmap (a){
                     style: TextStyle(color: Colors.black),
                     children: [
                       TextSpan(
-                        text: 'joshua_l ',
+                        text: b.nom,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      TextSpan(text: 'The game in Japan was amazing and I want to share some photos'),
                     ],
                   ),
                 ),
@@ -104,7 +104,7 @@ Widget postmap (a){
 }
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: post.map((e) => postmap(e),).toList(),
     );
   }

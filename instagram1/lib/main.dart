@@ -44,8 +44,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
               'Instagram',
               style: TextStyle(
                 fontSize: 35,
-color: Colors.white,                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
                 fontFamily: "insta",
               ),
             ), // Loading animatsiyasi
