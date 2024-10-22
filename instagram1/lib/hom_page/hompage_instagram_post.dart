@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class HompageInstagramPost extends StatefulWidget {
   const HompageInstagramPost({super.key});
 
@@ -11,13 +10,13 @@ class HompageInstagramPost extends StatefulWidget {
 class _HompageInstagramPostState extends State<HompageInstagramPost> {
   List<a> post = [
     a(
-      rasm: "images/1.jpg",
+      rasm: "images/i0.jpg",
       nom: "Rengo_ku",
       commit:
           "Liked by craig_love and 44,686 others\n The game in Japan was amazing and I want to share some photos",
     ),
     a(
-      rasm: "images/2.jpg",
+      rasm: "images/i1.jpg",
       nom: "tan_jiro",
       commit:
           "Liked by craig_love and 3,386 others\n NeverScrollableScrollPhysics to ensure",
@@ -69,10 +68,10 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.lightBlue[50], // Set light shade color for modal
+      backgroundColor: Theme.of(context).colorScheme.background, // Use theme background color
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.7, // 70% height
+          height: MediaQuery.of(context).size.height * 0.7, // 70% of screen height
           child: ChatScreen(
             index: index,
             comments: commentsList[index],
@@ -90,7 +89,15 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
       onDoubleTap: () => _toggleFavorite(index), // Double tap to like
       child: Container(
         width: double.infinity,
-        height: 600,
+        height: 550,
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+            ),
+            bottom: BorderSide(color: Colors.grey)
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -122,7 +129,7 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
                 children: [
                   Image.asset(
                     postItem.rasm!,
-                    width: double.infinity,
+                    width:400,
                     height: 300,
                     fit: BoxFit.cover,
                   ),
@@ -148,7 +155,7 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
                           isFavoritedList[index]
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color: isFavoritedList[index] ? Colors.red : Colors.black,
+                          color: isFavoritedList[index] ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
                         ),
                         onPressed: () => _toggleFavorite(index),
                       ),
@@ -167,7 +174,7 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
                       isBookmarkedList[index]
                           ? Icons.bookmark
                           : Icons.bookmark_border,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                     onPressed: () => _toggleBookmark(index),
                   ),
@@ -181,12 +188,11 @@ class _HompageInstagramPostState extends State<HompageInstagramPost> {
                 children: [
                   Text(
                     postItem.commit!,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.inversePrimary),
                   ),
                   SizedBox(height: 5),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.black),
                       children: [
                         TextSpan(
                           text: postItem.nom!,
@@ -270,7 +276,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       CircleAvatar(
                         radius: 18,
-                        backgroundImage: AssetImage('images/78.jpg'), // Update with your profile image path
+                        backgroundImage: AssetImage('images/i31.jpg'), // Update with your profile image path
                       ),
                       Text(
                         "G.B.M.R",
@@ -291,7 +297,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: TextField(
                     controller: _commentController,
                     decoration: InputDecoration(
-                      hintText: "Add a comment... (use emojis)",
+                      hintText: "Add a comment... ",
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.multiline, // Allow multiline input

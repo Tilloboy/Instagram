@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram1/hom_page/hompage.dart';
+import 'package:instagram1/pageview/pageview.dart';
 import 'package:instagram1/profile/Myprofile.dart';
 import 'package:instagram1/searchage/search_pages.dart';
 
@@ -25,11 +26,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   // List of widgets for different tabs
   static  List<Widget> _widgetOptions = <Widget>[
-    Hompage(), // For Home Page (Instagram feed)
+    MyHomePage(), // For Home Page (Instagram feed)
     SearchPage(), // Search Tab
     Center(child: Text('Add Post Page', style: TextStyle(fontSize: 24))), // Add Post Tab
     Center(child: Text('Notifications Page', style: TextStyle(fontSize: 24))), // Notifications Tab
-Myprofile()  ];
+MyProfile()  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +61,14 @@ Myprofile()  ];
     BottomNavigationBarItem(
       icon: CircleAvatar(
         radius: 15,
-        backgroundImage: AssetImage('images/78.jpg'), // Profile image
+        backgroundImage: AssetImage('images/i31.jpg'), // Profile image
       ),
       label: 'Profile',
     ),
   ],
   currentIndex: _selectedIndex,
-  selectedItemColor: Colors.black,
-  unselectedItemColor: Colors.grey,
+  selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+  unselectedItemColor: Theme.of(context).colorScheme.primary,
   onTap: _onItemTapped, // Handle tap on navigation bar item
 ),
 

@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Container(
                 width: 100,
                 height: 100,
-                child: Image.asset("images/instagramlogo.png"),
+                child: Image.asset("images1/tnstagramlogo.png"),
               ),
             ),
             SizedBox(

@@ -80,12 +80,15 @@ class _loginstatusState extends State<loginstatus> {
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         children: [
           SizedBox(height: 80),
-          Text(
-            'Instagram',
-            style: TextStyle(
-              fontFamily: 'insta',
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
+          Center(
+            child: Text(
+              'Instagram',
+              style: TextStyle(
+                fontFamily: 'insta',
+                fontSize: 35,
+                color: Theme.of(context).colorScheme.inversePrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(height: 40),

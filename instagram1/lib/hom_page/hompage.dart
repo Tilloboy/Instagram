@@ -51,7 +51,7 @@ class _HompageState extends State<Hompage> {
                     fontFamily: 'insta',
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
               ),
@@ -110,7 +110,6 @@ class _HompageState extends State<Hompage> {
                     child: HomepageStories(),
                   ),
                 ),
-              
                 Align(
                   alignment: Alignment.center,
                   child: Container(
@@ -119,7 +118,7 @@ class _HompageState extends State<Hompage> {
                   ),
                 ),
                 Container(
-                  child: HompageInstagramPos(),
+                  child: HomepageInstagramPost(),
                   width: double.infinity,
                 ),
               ],
@@ -131,63 +130,115 @@ class _HompageState extends State<Hompage> {
   }
 }
 
-class HompageInstagramPos extends StatefulWidget {
-  const HompageInstagramPos({super.key});
+class HomepageInstagramPost extends StatefulWidget {
+  const HomepageInstagramPost({super.key});
 
   @override
-  State<HompageInstagramPos> createState() => _HompageInstagramPosState();
+  State<HomepageInstagramPost> createState() => _HomepageInstagramPostState();
 }
 
-class _HompageInstagramPosState extends State<HompageInstagramPos> {
-  // List of posts to display, each post is an instance of class 'a'
-  List<a> post = [
-    a(
-      images: [
-        "images/1.jpg",
-        "images/2.jpg",
-        "images/59.jpg",
-      ],
-      nom: "joshua_l",
-      commit: "Liked by craig_love and 44,686 others\n The game in Japan was amazing and I want to share some photos",
+class _HomepageInstagramPostState extends State<HomepageInstagramPost> {
+  List<Post> posts = [
+    Post(
+      images: ["images/i0.jpg", "images/i1.jpg", "images/i20.jpg"],
+      username: "joshua_l",
+      caption:
+          "Craig_love and 44,686 others liked this. Sharing some moments from the game in Japan.",
       location: "Tokyo, Japan",
     ),
+    // Add more posts here
   ];
 
-  int _currentIndex = 0; // Carousel index
+  List<bool> isFavoritedList = [];
+  List<bool> isBookmarkedList = [];
+  List<List<String>> commentsList = [];
+  List<bool> showLikeAnimation = [];
+  List<int> carouselIndexList = [];
 
-  // Heart and Bookmark states
-  List<bool> isFavoritedList = [false]; // Track favorite status for each post
-  List<bool> isBookmarkedList = [false]; // Track bookmark status for each post
+  @override
+  void initState() {
+    super.initState();
+    isFavoritedList = List<bool>.filled(posts.length, false);
+    isBookmarkedList = List<bool>.filled(posts.length, false);
+    commentsList = List<List<String>>.generate(posts.length, (_) => []);
+    showLikeAnimation = List<bool>.filled(posts.length, false);
+    carouselIndexList = List<int>.filled(posts.length, 0);
+  }
 
-  // Function to toggle heart (favorite)
   void _toggleFavorite(int index) {
     setState(() {
-      isFavoritedList[index] = !isFavoritedList[index]; // Toggle favorite status
+      isFavoritedList[index] = !isFavoritedList[index];
+      if (isFavoritedList[index]) {
+        showLikeAnimation[index] = true;
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            showLikeAnimation[index] = false;
+          });
+        });
+      }
     });
   }
 
-  // Function to toggle bookmark
   void _toggleBookmark(int index) {
     setState(() {
-      isBookmarkedList[index] = !isBookmarkedList[index]; // Toggle bookmark status
+      isBookmarkedList[index] = !isBookmarkedList[index];
     });
   }
 
-  // Method to map each post to a widget
-  Widget postmap(a postItem, int index) {
-    return Container(
+  void _addComment(int index, String comment) {
+    setState(() {
+      commentsList[index].insert(0, comment);
+    });
+  }
+
+  void _openChatScreen(int index) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.7,
+          child: ChatScreen(
+            index: index,
+            comments: commentsList[index],
+            addComment: (comment) {
+              _addComment(index, comment);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget postMap(Post postItem, int index) {
+  return GestureDetector(
+    onDoubleTap: () => _toggleFavorite(index),
+    child: Container(
       width: double.infinity,
-      height: 700,
+      height: 550,
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey,
+          ),
+          bottom: BorderSide(color: Colors.grey),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile and location section
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage("images/profile.jpg"), // Profile image
+                  backgroundImage: AssetImage(postItem.images![0]),
                   radius: 25,
                 ),
                 SizedBox(width: 10),
@@ -195,84 +246,69 @@ class _HompageInstagramPosState extends State<HompageInstagramPos> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      postItem.nom!, // Username
+                      postItem.username!,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(postItem.location!), // Location
+                    Text(postItem.location!),
                   ],
                 ),
               ],
             ),
           ),
-          // Carousel Slider for images
           Stack(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
             children: [
               CarouselSlider(
+                items: postItem.images!
+                    .map((image) => ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.asset(
+                            image,
+                            width: 400,
+                            height: 300,
+                            fit: BoxFit.cover,
+                          ),
+                        ))
+                    .toList(),
                 options: CarouselOptions(
-                  height: 400.0, // Height of the carousel
+                  height: 300,
                   enlargeCenterPage: true,
                   enableInfiniteScroll: false,
-                  onPageChanged: (index, reason) {
+                  onPageChanged: (i, reason) {
                     setState(() {
-                      _currentIndex = index; // Update current index on page change
+                      carouselIndexList[index] = i;
                     });
                   },
                 ),
-                items: postItem.images!.map((image) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Image.asset(
-                        image, // Load image
-                        fit: BoxFit.cover, // Cover the container
-                      ),
-                    ),
-                  );
-                }).toList(),
               ),
-              // Display current image index in the top right corner
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    "${_currentIndex + 1}/${postItem.images!.length}", // Current image index
-                    style: TextStyle(color: Colors.white),
-                  ),
+              if (showLikeAnimation[index])
+                Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                  size: 100,
                 ),
-              ),
             ],
           ),
-          // Dots indicator for carousel images
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: postItem.images!.asMap().entries.map((entry) {
-              return GestureDetector(
-                onTap: () => setState(() {
-                  _currentIndex = entry.key; // Update current index on dot tap
-                }),
-                child: Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+          // Custom Indicator
+          Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (dotIndex) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 3.0),
+                  width: dotIndex == carouselIndexList[index] ? 12 : 8,
+                  height: 8,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentIndex == entry.key
-                        ? Colors.blueAccent // Active dot color
-                        : Colors.grey, // Inactive dot color
+                    color: dotIndex == carouselIndexList[index]
+                        ? Colors.blue // Use your desired color for the active dot
+                        : Colors.grey[300], // Light shade for inactive dots
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                ),
-              );
-            }).toList(),
+                );
+              }),
+            ),
           ),
-          // Like and caption section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             child: Row(
@@ -281,55 +317,49 @@ class _HompageInstagramPosState extends State<HompageInstagramPos> {
                 Row(
                   children: [
                     IconButton(
-                      iconSize: 25, // Set icon size
+                      iconSize: 25,
                       icon: Icon(
                         isFavoritedList[index]
-                            ? Icons.favorite // Filled heart if favorited
-                            : Icons.favorite_border, // Empty heart if not favorited
-                        color: isFavoritedList[index] ? Colors.red : Colors.black, // Change color when tapped
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: isFavoritedList[index]
+                            ? Colors.red
+                            : Theme.of(context).colorScheme.inversePrimary,
                       ),
-                      onPressed: () => _toggleFavorite(index), // Call toggle favorite function
+                      onPressed: () => _toggleFavorite(index),
                     ),
                     SizedBox(width: 10),
-                    Icon(Icons.chat_bubble_outline), // Comment icon
+                    IconButton(
+                      icon: Icon(Icons.chat_bubble_outline),
+                      onPressed: () => _openChatScreen(index),
+                    ),
                     SizedBox(width: 10),
-                    Icon(Icons.send), // Share icon
+                    Icon(Icons.send),
                   ],
                 ),
                 IconButton(
-                  iconSize: 30, // Set icon size
+                  iconSize: 30,
                   icon: Icon(
                     isBookmarkedList[index]
-                        ? Icons.bookmark // Filled bookmark if bookmarked
-                        : Icons.bookmark_border, // Empty bookmark if not bookmarked
-                    color: Colors.black, // Bookmark color
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
-                  onPressed: () => _toggleBookmark(index), // Call toggle bookmark function
+                  onPressed: () => _toggleBookmark(index),
                 ),
               ],
             ),
           ),
-          // Post caption
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  postItem.commit!,  // Caption of the post
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      TextSpan(
-                        text: postItem.nom!, // Username in caption
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: ' The game in Japan was amazing and I want to share some photos.'), // Fixed comment text
-                    ],
+                  postItem.caption!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
               ],
@@ -337,30 +367,198 @@ class _HompageInstagramPosState extends State<HompageInstagramPos> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
-    // Building the list of posts
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(), // Disable scrolling of the ListView
-      itemCount: post.length, // Number of posts
+      itemCount: posts.length,
       itemBuilder: (context, index) {
-        return postmap(post[index], index); // Map each post to widget
+        Post postItem = posts[index];
+        return postMap(postItem, index);
       },
     );
   }
 }
 
-// Class to define the structure of a post
-class a {
-  String? rasm; // Not used in the current implementation
-  String? nom; // Username of the post
-  String? commit;  // Caption of the post
-  List<String>? images; // List of images in the post
-  String? location; // Location of the post
+// Chat Screen widget remains the same
 
-  a({this.nom, this.rasm, this.commit, this.images, this.location}); // Constructor
+// Chat Screen widget remains the same
+
+// Chat Screen
+class ChatScreen extends StatefulWidget {
+  final int index;
+  final List<String> comments;
+  final Function(String) addComment;
+
+  const ChatScreen({
+    Key? key,
+    required this.index,
+    required this.comments,
+    required this.addComment,
+  }) : super(key: key);
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  TextEditingController _commentController = TextEditingController();
+  bool _showEmojiPanel = false;
+  List<String> emojis = [
+    '😊',
+    '❤️',
+    '👍',
+    '😂',
+    '🎉',
+    '😍',
+    '😢',
+    '😎',
+    '🥳',
+    '💔',
+    '✨',
+    '💯',
+    '🙏',
+    '😱',
+    '💖',
+    '🔥',
+    '💃',
+    '🐶',
+    '🐱',
+    '🌹',
+    '🌈',
+    '🍕',
+    '🍔',
+    '🥗',
+    '🍦',
+    '🍰',
+    '🍉',
+    '🌻',
+    '🎈',
+    '🎂',
+    '🚀',
+    '🏆',
+    '🎤',
+    '🕺',
+    '🤗',
+    '😇',
+    '😈',
+    '🥺',
+    '🤩',
+    '🥰',
+    '🤓',
+    '😷',
+    '🤖',
+    '👻',
+    '💀',
+    '☀️',
+    '🌧️',
+    '🌕',
+    '🎃',
+    '🦄'
+  ];
+
+  void _toggleEmojiPanel() {
+    setState(() {
+      _showEmojiPanel = !_showEmojiPanel;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: widget.comments.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage: AssetImage(
+                            'images/i31.jpg'), // Update with your profile image path
+                      ),
+                      Text(
+                        "G.B.M.R",
+                        style:
+                            TextStyle(fontSize: 8, fontWeight: FontWeight.w800),
+                      )
+                    ],
+                  ),
+                  title: Text(widget.comments[index]),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    decoration: InputDecoration(
+                      hintText: "Add a comment...",
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    if (_commentController.text.isNotEmpty) {
+                      widget.addComment(_commentController.text);
+                      _commentController.clear();
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.emoji_emotions),
+                  onPressed: _toggleEmojiPanel,
+                ),
+              ],
+            ),
+          ),
+          if (_showEmojiPanel)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: emojis.map((emoji) {
+                  return GestureDetector(
+                    onTap: () {
+                      _commentController.text += emoji;
+                    },
+                    child: Text(
+                      emoji,
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// Post class
+class Post {
+  String? username;
+  String? caption;
+  List<String>? images;
+  String? location;
+
+  Post({this.username, this.caption, this.images, this.location});
 }
