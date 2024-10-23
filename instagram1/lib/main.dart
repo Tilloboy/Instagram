@@ -74,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontFamily: "insta",
               ),
             ), // Loading animatsiyasi
+            
           ],
         ),
       ),

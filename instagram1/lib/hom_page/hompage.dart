@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram1/hom_page/hompage_instagram_post.dart';
 import 'package:instagram1/hom_page/hompage_storis.dart';
+import 'package:instagram1/hom_page/messages/camera.dart';
+import 'package:instagram1/hom_page/messages/messages.dart';
 
 class Hompage extends StatefulWidget {
   const Hompage({super.key});
@@ -37,8 +39,9 @@ class _HompageState extends State<Hompage> {
               child: IconButton(
                 icon: Icon(CupertinoIcons.camera, size: 30),
                 onPressed: () {
-                  // Camera action
-                },
+                        // Direct Messenger action
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>Caera(),));
+                      },
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -92,6 +95,7 @@ class _HompageState extends State<Hompage> {
                       icon: Icon(CupertinoIcons.paperplane, size: 30),
                       onPressed: () {
                         // Direct Messenger action
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => nommessage(),));
                       },
                     ),
                   ],
